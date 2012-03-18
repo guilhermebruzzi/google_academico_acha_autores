@@ -1,0 +1,31 @@
+body {
+    padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+}
+
+@color-vermelho-claro: #B22222;
+@color-vermelho-escuro: #8B0000;
+
+/* Topo */
+
+.navbar .navbar-inner{
+    margin-top: 0px;
+    background-color: @color-vermelho-escuro;
+    background-image: none;
+}
+.navbar .nav .active > a, .navbar .nav .active > a:hover {
+    margin-top: 0px;
+    background-color: @color-vermelho-claro;
+}
+
+h1, h2, h3, h4, h5, legend{
+    color: @color-vermelho-escuro;
+}
+
+#form-pesquisa{
+    #pesquisa{
+        margin-top: 10px;
+    }
+    #btn-pesquisar{
+        margin-top: 1px;
+    }
+}
