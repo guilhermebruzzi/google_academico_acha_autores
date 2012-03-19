@@ -3,17 +3,30 @@
 import os
 import tornado
 from tornado.web import Application, RequestHandler, HTTPError, StaticFileHandler
+from propriedades import propriedades
+from pesquisa_google import GoogleScholarSpider
 from template import render_template
 
 class PesquisaHandler(tornado.web.RequestHandler):
-    
-    def get_resultado(self, pesquisa):
-        return None
-    
-    def call_template_pesquisa(self, pesquisa=None, resultado=None):
+
+    def __format_resultado__(self, resultado):
+        resultado_formatado = []
+        resultado["citation_authors"] = resultado["citation_authors"] + resultado["citation_author"]
+        del(resultado["citation_author"])
+        for propriedade in propriedades:
+            if resultado.has_key(propriedade):
+                propriedade_valor = {"label": propriedade.replace("_", " "), "valor": ""}
+                for valor in resultado[propriedade]:
+                    propriedade_valor["valor"] += " " + valor
+                propriedade_valor["valor"] = propriedade_valor["valor"].strip()
+                resultado_formatado.append(propriedade_valor)
+        return resultado_formatado
+
+    def __call_template_pesquisa__(self, pesquisa=None, resultado=None):
         title = "Pesquisa no Google Acadêmico" if pesquisa == None else "Resultado da pesquisa: " + pesquisa
-        resultado = "Nenhuma pesquisa feita!" if resultado == None else resultado
-        options = {"title": title, "Resultado":resultado}
+        if resultado != None:
+            resultado = self.__format_resultado__(resultado)
+        options = {"title": title, "resultado": resultado}
         result = render_template("pesquisa.html", options)
         self.write(result)
 
@@ -23,8 +36,11 @@ class PesquisaHandler(tornado.web.RequestHandler):
             pesquisa = self.get_argument("pesquisa")
         except:
             pesquisa = None
-        resultado = self.get_resultado(pesquisa)
-        self.call_template_pesquisa(pesquisa, resultado)
+            resultado = None
+        if pesquisa != None:
+            spider = GoogleScholarSpider()
+            resultado = spider.run(pesquisa)
+        self.__call_template_pesquisa__(pesquisa, resultado)
             
         
 STATIC_PATH = os.path.abspath(os.path.dirname(__file__))

@@ -10,9 +10,15 @@
         <input type="text" id="pesquisa" name="pesquisa" /> &nbsp;
         <a id="btn-pesquisar" class="btn btn-small" href="#"><i class="icon-search"></i></a>
     </form>
-    <div id="resultado">
-        {{ resultado }}
-    </div>
+    {% if resultado != None %}
+        <div id="resultado">
+            {% for propriedade in resultado %}
+                <span class="resultado_label">{{ propriedade.label }}:</span>
+                <span class="resultado_valor">{{ propriedade.valor }}</span>
+                <br />
+            {% endfor %}
+        </div>
+    {% endif %}
 </div>
 
 {% endblock %}
