@@ -21,12 +21,18 @@ class PesquisaHandler(tornado.web.RequestHandler):
                 propriedade_valor["valor"] = propriedade_valor["valor"].strip()
                 resultado_formatado.append(propriedade_valor)
         return resultado_formatado
-
-    def __call_template_pesquisa__(self, pesquisa=None, resultado=None):
-        title = "Pesquisa no Google Acadêmico" if pesquisa == None else "Resultado da pesquisa: " + pesquisa
-        if resultado != None:
+        
+    def __get_resultados__(self, spider):
+        resultados = spider.get_dict_authors()
+        resultados_formatados = []
+        for resultado in resultados:
             resultado = self.__format_resultado__(resultado)
-        options = {"title": title, "resultado": resultado}
+            resultados_formatados.append(resultado)
+        return resultados_formatados
+
+    def __call_template_pesquisa__(self, pesquisa=None, resultados=None):
+        title = "Pesquisa no Google Acadêmico" if pesquisa == None else "Resultado da pesquisa: " + pesquisa
+        options = {"title": title, "resultados": resultados}
         result = render_template("pesquisa.html", options)
         self.write(result)
 
@@ -36,11 +42,13 @@ class PesquisaHandler(tornado.web.RequestHandler):
             pesquisa = self.get_argument("pesquisa")
         except:
             pesquisa = None
-            resultado = None
+            resultados = None
         if pesquisa != None:
             spider = GoogleScholarSpider()
-            resultado = spider.run(pesquisa)
-        self.__call_template_pesquisa__(pesquisa, resultado)
+            spider.run_google_search(pesquisa)
+            spider.run_pages_parser()
+            resultados = self.__get_resultados__(spider)
+        self.__call_template_pesquisa__(pesquisa, resultados)
             
         
 STATIC_PATH = os.path.abspath(os.path.dirname(__file__))

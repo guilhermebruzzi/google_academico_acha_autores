@@ -8,14 +8,17 @@
     <h1> {{ title }} </h1>
     <form id="form-pesquisa" method="get" action="">
         <input type="text" id="pesquisa" name="pesquisa" /> &nbsp;
-        <a id="btn-pesquisar" class="btn btn-small" href="#"><i class="icon-search"></i></a>
+        <a id="btn-pesquisar" class="btn btn-small" href="#"><i class="icon-search"></i></a> &nbsp;
+        <span id="tempo_medio">Tempo médio de pesquisa: 1min - 2min</span>
     </form>
-    {% if resultado != None %}
-        <div id="resultado">
-            {% for propriedade in resultado %}
-                <span class="resultado_label">{{ propriedade.label }}:</span>
-                <span class="resultado_valor">{{ propriedade.valor }}</span>
-                <br />
+    {% if resultados != None %}
+        <div id="resultados">
+            {% for resultado in resultados %}
+                {% for propriedade in resultado %}
+                    <span class="resultado_label">{{ propriedade.label }}:</span>
+                    <span class="resultado_valor">{{ propriedade.valor }}</span>
+                    <br />
+                {% endfor %}
             {% endfor %}
         </div>
     {% endif %}
