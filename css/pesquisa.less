@@ -32,3 +32,33 @@ h1, h2, h3, h4, h5, legend{
         margin-top: 1px;
     }
 }
+
+
+.span_resultados (@font-size: 14px, @margin-bottom: 5px) {
+    font-weight:bold;
+    font-size: @font-size;
+    color: @color-vermelho-escuro;
+    margin-bottom: @margin-bottom;
+}
+
+#resultados_possiveis{
+    #urls_possiveis_span{
+        .span_resultados;
+    }
+    .resultado{
+        margin-left: 15px;
+        margin-top: 5px;
+    }
+}
+
+#resultados_impossiveis{
+    margin-left: 40px;
+    #urls_impossiveis_span{
+        .span_resultados;
+    }
+    .urls_sem_resultado{
+        margin-left: 15px;
+        margin-top: 5px;
+    }
+}
+
